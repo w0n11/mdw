@@ -3,17 +3,20 @@ package edu.sungshin.tap_caltimer;
 import android.app.TabActivity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-import com.example.tap_caltimer.R;
+import java.util.ArrayList;
 
-@SuppressWarnings("deprecation")
 public class MainActivity extends TabActivity {
 
     private TextView countdownText;
@@ -34,6 +37,8 @@ public class MainActivity extends TabActivity {
     private long time = 0;
     private long tempTime = 0;
 
+    ListView listView;
+
     FrameLayout setting;
     FrameLayout timer;
 
@@ -45,7 +50,6 @@ public class MainActivity extends TabActivity {
         TabHost tabHost = getTabHost();
 
         TabSpec tabSpecFirst = tabHost.newTabSpec("first").setIndicator("Food");
-
         tabSpecFirst.setContent(R.id.first);
         tabHost.addTab(tabSpecFirst);
 
@@ -58,6 +62,33 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(tabSpecThird);
 
         tabHost.setCurrentTab(0);
+
+        listView = findViewById(R.id.first);
+
+        ArrayList<Custom_ListView.ListData> listViewData = new ArrayList<>();
+        for (int i=1; i<=30; ++i)
+        {
+            Custom_ListView.ListData listData = new Custom_ListView.ListData();
+
+            listData.mainImage = R.drawable.ic_launcher_foreground;
+
+            listData.title = "레시피 " + i;
+            listData.body_1 = "재료: aa, bb, cc...";
+
+            listViewData.add(listData);
+        }
+
+
+        ListAdapter oAdapter = new Custom_ListView(listViewData);
+        listView.setAdapter(oAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String clickName = listViewData.get(position).title;
+                Log.d("확인","name : "+clickName);
+            }
+        });
 
         countdownText = findViewById(R.id.countdown_text);
         startButton = findViewById(R.id.countdown_button);
